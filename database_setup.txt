@@ -1,0 +1,48 @@
+-- --------------------------------------------------------
+-- Sistem Peminjaman Buku Perpustakaan
+-- Database Setup Script
+-- --------------------------------------------------------
+
+-- Buat database jika belum tersedia
+CREATE DATABASE IF NOT EXISTS webpeminjamanbuku;
+
+-- Gunakan database
+USE webpeminjamanbuku;
+
+-- --------------------------------------------------------
+-- Struktur tabel untuk user
+-- Menyimpan data untuk autentikasi user
+-- Domain email user akan digunakan sebagai password (e.g., user@gmail.com -> password: gmail)
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(50) NOT NULL
+);
+
+-- --------------------------------------------------------
+-- Struktur tabel untuk peminjaman
+-- Dengan aturan sebagai berikut :
+-- 1. Setiap peminjaman memiliki ID unik
+-- 2. Tanggal pengembalian harus setelah atau sama dengan tanggal peminjaman
+-- 3. Status hanya dapat berupa 'Dipinjam' atau 'Dikembalikan'
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS peminjaman (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_peminjaman VARCHAR(50) NOT NULL UNIQUE,
+    nama_peminjam VARCHAR(100) NOT NULL,
+    nomor_telepon VARCHAR(20) NOT NULL,
+    judul_buku VARCHAR(200) NOT NULL,
+    tanggal_pinjam DATE NOT NULL,
+    tanggal_kembali DATE NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    CHECK (tanggal_kembali >= tanggal_pinjam),
+    CHECK (status IN ('Dipinjam', 'Dikembalikan'))
+);
+
+-- Menghapus tabel transaksi yang lama jika ada
+DROP TABLE IF EXISTS transactions;
+
+-- --------------------------------------------------------
+-- End of database setup script
+-- --------------------------------------------------------
